@@ -119,7 +119,7 @@ def show_dashboard():
         "Materia": e.name, 
         "Voto": e.grade, 
         "CFU": e.credits, 
-        "Data": e.date.strftime('%d/%m/%Y') if hasattr(e.date, 'strftime') else e.date
+        "Data": e.date.strftime('%d/%m/%Y') # if hasattr(e.date, 'strftime') else e.date
     } for e in exams])
 
     # 3. Calcolo KPI (Indicatori Chiave)

@@ -161,11 +161,9 @@ def show_dashboard():
         fig.update_xaxes(tickformat="%d/%m/%Y")
         # Aggiunge una linea rossa tratteggiata per la media
         fig.add_hline(y=media_ponderata, line_dash="dash", line_color="red", annotation_text="Media")
-        st.plotly_chart(fig, width=True)
+        st.plotly_chart(fig, use_container_width=True)
 
     with tab_data:
-        # Mostriamo la tabella pulita (senza ID e colonne di calcolo)
-        #st.dataframe(df[["Materia", "Voto", "CFU", "Data"]], use_container_width=True)
         # Creiamo una copia per la visualizzazione senza rovinare i calcoli originali
         df_visualizzazione = df.copy()
         

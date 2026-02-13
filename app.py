@@ -119,7 +119,7 @@ def show_dashboard():
         "Materia": e.name, 
         "Voto": e.grade, 
         "CFU": e.credits, 
-        "Data": e.date.strftime('%d/%m/%Y') # if hasattr(e.date, 'strftime') else e.date
+        "Data": e.date
     } for e in exams])
 
     # 3. Calcolo KPI (Indicatori Chiave)
@@ -161,12 +161,24 @@ def show_dashboard():
         fig.update_xaxes(tickformat="%d/%m/%Y")
         # Aggiunge una linea rossa tratteggiata per la media
         fig.add_hline(y=media_ponderata, line_dash="dash", line_color="red", annotation_text="Media")
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width=True)
 
     with tab_data:
         # Mostriamo la tabella pulita (senza ID e colonne di calcolo)
-        st.dataframe(df[["Materia", "Voto", "CFU", "Data"]], use_container_width=True)
+        #st.dataframe(df[["Materia", "Voto", "CFU", "Data"]], use_container_width=True)
+        # Creiamo una copia per la visualizzazione senza rovinare i calcoli originali
+        df_visualizzazione = df.copy()
         
+        # Trasformiamo la data nel formato italiano DD/MM/YYYY
+        # Usiamo errors='ignore' per sicurezza se ci fossero valori strani
+        df_visualizzazione["Data"] = pd.to_datetime(df_visualizzazione["Data"]).dt.strftime('%d/%m/%Y')
+    
+        # Ora mostriamo la versione pulita
+        st.dataframe(
+            df_visualizzazione[["Materia", "Voto", "CFU", "Data"]], 
+            use_container_width=True,
+            hide_index=True # Questo toglie la colonna dei numeri a sinistra, rendendolo più pulito su mobile
+        )
         # Sezione Cancellazione
         st.subheader("Gestione")
         exam_to_delete = st.selectbox("Seleziona un esame da eliminare:", df["Materia"].tolist())

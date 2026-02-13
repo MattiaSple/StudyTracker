@@ -26,7 +26,7 @@ if "user_id" not in st.session_state:
 def show_login_page():
     """Gestisce la schermata di ingresso (Login/Registrazione)."""
     st.title("🔐 Study Tracker")
-    st.write("Il tuo libretto universitario nel cloud.")
+    st.write("Il tuo libretto universitario personale!")
     
     tab1, tab2 = st.tabs(["Accedi", "Registrati"])
     
@@ -132,13 +132,20 @@ def show_dashboard():
     base_laurea = (media_ponderata * 110) / 30
     cfu_totali = df["CFU"].sum()
 
-    # Mostriamo le metriche in 4 colonne
-    kpi1, kpi2, kpi3, kpi4 = st.columns(4)
-    kpi1.metric("Media Aritmetica", f"{media_aritmetica:.2f}")
-    kpi2.metric("Media Ponderata", f"{media_ponderata:.2f}")
-    kpi3.metric("Proiezione Laurea", f"{base_laurea:.1f}")
-    kpi4.metric("CFU Acquisiti", cfu_totali)
-
+    # Mostriamo in una tabella 2x2
+    row1_col1, row1_col2 = st.columns(2)
+    with row1_col1:
+        st.metric("Media Aritmetica", f"{media_aritmetica:.2f}")
+    with row1_col2:
+        st.metric("Media Ponderata", f"{media_ponderata:.2f}")
+    
+    # Seconda riga di metriche
+    row2_col1, row2_col2 = st.columns(2)
+    with row2_col1:
+        st.metric("Proiezione Laurea", f"{base_laurea:.1f}")
+    with row2_col2:
+        st.metric("CFU Acquisiti", cfu_totali)
+    
     st.divider()
 
     # 4. Grafici e Tabelle

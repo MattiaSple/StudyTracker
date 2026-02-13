@@ -119,7 +119,7 @@ def show_dashboard():
         "Materia": e.name, 
         "Voto": e.grade, 
         "CFU": e.credits, 
-        "Data": e.date
+        "Data": e.date.strftime('%d/%m/%Y') if hasattr(e.date, 'strftime') else e.date
     } for e in exams])
 
     # 3. Calcolo KPI (Indicatori Chiave)
@@ -135,9 +135,9 @@ def show_dashboard():
     # Mostriamo in una tabella 2x2
     row1_col1, row1_col2 = st.columns(2)
     with row1_col1:
-        st.metric("Media Aritmetica", f"{media_aritmetica:.2f}")
-    with row1_col2:
         st.metric("Media Ponderata", f"{media_ponderata:.2f}")
+    with row1_col2:
+        st.metric("Media Aritmetica", f"{media_aritmetica:.2f}")
     
     # Seconda riga di metriche
     row2_col1, row2_col2 = st.columns(2)
@@ -157,6 +157,8 @@ def show_dashboard():
         df['Data'] = pd.to_datetime(df['Data'])
         df_sorted = df.sort_values("Data", ascending=True).reset_index(drop=True)
         fig = px.line(df_sorted, x="Data", y="Voto", markers=True, title="Andamento Voti")
+        # Questo comando forza Plotly a mostrare le date in modo pulito sull'asse X
+        fig.update_xaxes(tickformat="%d/%m/%Y")
         # Aggiunge una linea rossa tratteggiata per la media
         fig.add_hline(y=media_ponderata, line_dash="dash", line_color="red", annotation_text="Media")
         st.plotly_chart(fig, use_container_width=True)
